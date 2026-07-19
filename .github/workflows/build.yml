@@ -25,21 +25,13 @@ jobs:
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
 
       - name: Install cargo-ndk
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: cargo-ndk
-          version: "3.6"
+        run: cargo install cargo-ndk --version 2.12.5
 
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.11"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -56,25 +48,13 @@ jobs:
       - name: Set NDK environment variable
         run: echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> $GITHUB_ENV
 
-      - name: Build native libraries (arm64-v8a)
+      - name: Build native libraries
         working-directory: authenticator
-        run: cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib
-
-      - name: Build native libraries (armeabi-v7a)
-        working-directory: authenticator
-        run: cargo ndk -t armeabi-v7a -o target/jniLibs build --release --lib
-
-      - name: Build native libraries (x86_64)
-        working-directory: authenticator
-        run: cargo ndk -t x86_64 -o target/jniLibs build --release --lib
-
-      - name: Build native libraries (x86)
-        working-directory: authenticator
-        run: cargo ndk -t x86 -o target/jniLibs build --release --lib
+        run: |
+          cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 -t x86 -o target/jniLibs build --release --lib
 
       - name: Verify native libraries
-        run: |
-          find authenticator/target/jniLibs -name "*.so" -exec ls -la {} \;
+        run: find authenticator/target/jniLibs -name "*.so" -exec ls -la {} \;
 
       - name: Generate debug keystore
         working-directory: authenticator/android
@@ -92,7 +72,7 @@ jobs:
       - name: Patch signing config
         working-directory: authenticator/android
         run: |
-          cat >> app/build.gradle << 'EOF'
+          cat >> app/build.gradle << 'PATCH'
 
           android.signingConfigs.debug {
               storeFile file("debug.keystore")
@@ -101,15 +81,11 @@ jobs:
               keyPassword "android"
           }
           android.buildTypes.release.signingConfig = android.signingConfigs.debug
-          EOF
+          PATCH
 
-      - name: Build debug APK
+      - name: Build APK
         working-directory: authenticator/android
-        run: gradle assembleDebug --no-daemon --stacktrace
-
-      - name: Build release APK
-        working-directory: authenticator/android
-        run: gradle assembleRelease --no-daemon --stacktrace
+        run: gradle assembleDebug assembleRelease --no-daemon --stacktrace
 
       - name: List APK outputs
         run: find authenticator/android/app/build/outputs -name "*.apk" || true
