@@ -45,7 +45,16 @@ jobs:
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/26.1.10909125" >> $GITHUB_ENV
 
       - name: Build native library (arm64-v8a)
-        run: cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib
+        id: build_arm64
+        run: |
+          cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib -v 2>&1 | tee build-arm64.log
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Show build error (arm64-v8a)
+        if: failure() && steps.build_arm64.outcome == 'failure'
+        run: tail -100 build-arm64.log
+        shell: bash
 
       - name: Build native library (armeabi-v7a)
         run: cargo ndk -t armeabi-v7a -o target/jniLibs build --release --lib
