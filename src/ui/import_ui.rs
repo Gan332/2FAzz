@@ -8,7 +8,6 @@ pub fn dialog(ctx: &egui::Context, app: &mut AuthenticatorApp) {
         .resizable(false)
         .collapsible(false)
         .title_bar(false)
-        .rounding(egui::Rounding::same(20.0f32))
         .frame(egui::Frame::none().fill(theme.bg_secondary()).rounding(egui::Rounding::same(20.0f32)))
         .show(ctx, |ui| {
             ui.add_space(8.0f32);
