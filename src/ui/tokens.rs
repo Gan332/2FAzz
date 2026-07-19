@@ -91,7 +91,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut AuthenticatorApp) {
                                         .collect(),
                                     closed: false,
                                     fill: egui::Color32::TRANSPARENT,
-                                    stroke: egui::Stroke::new(2.5f32, app.theme.accent_color()),
+                                    stroke: egui::Stroke::new(2.5f32, app.theme.accent_color()).into(),
                                 };
                                 ui.painter().add(path);
 
