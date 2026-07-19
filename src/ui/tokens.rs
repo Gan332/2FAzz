@@ -149,7 +149,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut AuthenticatorApp) {
 
         ui.add_space(70.0);
 
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Bottom), |ui| {
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Max), |ui| {
             let fab = egui::Button::new(
                 egui::RichText::new("+").size(28.0).color(egui::Color32::WHITE),
             )

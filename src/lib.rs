@@ -20,7 +20,6 @@ pub fn android_main(app: winit::platform::android::activity::AndroidApp) {
 
     let options = eframe::NativeOptions {
         android_app: Some(app),
-        persistence_path: Some(data_path),
         ..Default::default()
     };
 
