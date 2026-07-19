@@ -13,7 +13,7 @@ pub static DATA_DIR: OnceLock<std::path::PathBuf> = OnceLock::new();
 
 #[cfg(target_os = "android")]
 #[no_mangle]
-pub fn android_main(app: android_activity::AndroidApp) {
+pub fn android_main(app: winit::platform::android::activity::AndroidApp) {
     let data_path = app.internal_data_path().unwrap_or_else(|| std::path::PathBuf::from("."));
     DATA_DIR.set(data_path.clone()).ok();
 
