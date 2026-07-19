@@ -1,0 +1,31 @@
+[package]
+name = "authenticator"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "authenticator"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+eframe = { version = "0.30", features = [
+    "default_fonts",
+    "glow",
+    "android-native-activity",
+    "persistence",
+] }
+egui = "0.30"
+android-activity = { version = "0.6", features = ["native-activity"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+aes-gcm = "0.10"
+pbkdf2 = "0.12"
+sha2 = "0.10"
+hmac = "0.12"
+sha1 = "0.10"
+base32 = "0.5"
+rand = "0.8"
+log = "0.4"
+
+[target.'cfg(not(target_os = "android"))'.dependencies]
+env_logger = "0.11"
