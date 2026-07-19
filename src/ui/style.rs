@@ -90,7 +90,7 @@ pub fn ios_card(ui: &mut egui::Ui, theme: &crate::theme::AppTheme, add_contents:
 
 pub fn ios_button(
     ui: &mut egui::Ui,
-    text: impl Into<egui::WidgetText>,
+    text: impl Into<String>,
     accent: egui::Color32,
 ) -> egui::Response {
     ui.add_sized(
@@ -105,7 +105,7 @@ pub fn ios_button(
 
 pub fn ios_destructive_button(
     ui: &mut egui::Ui,
-    text: impl Into<egui::WidgetText>,
+    text: impl Into<String>,
     theme: &crate::theme::AppTheme,
 ) -> egui::Response {
     ui.add_sized(
