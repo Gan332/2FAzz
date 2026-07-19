@@ -2,21 +2,14 @@
 name = "authenticator"
 version = "0.1.0"
 edition = "2021"
+resolver = "2"
 
 [lib]
 name = "authenticator"
 crate-type = ["cdylib", "rlib"]
 
-[features]
-default = []
-android = ["eframe/android-native-activity"]
-
 [dependencies]
-eframe = { version = "0.30", default-features = false, features = [
-    "default_fonts",
-    "glow",
-    "persistence",
-] }
+eframe = "0.30"
 egui = "0.30"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

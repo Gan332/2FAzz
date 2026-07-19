@@ -35,8 +35,14 @@ android {
             assets.srcDirs = ['src/main/assets']
         }
     }
+
+    ndk {
+        abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.games:games-activity:3.0.5'
+    implementation 'androidx.games:games-text-input:3.0.5'
 }
