@@ -53,7 +53,12 @@ jobs:
 
       - name: Show build error (arm64-v8a)
         if: failure() && steps.build_arm64.outcome == 'failure'
-        run: tail -100 build-arm64.log
+        run: |
+          echo "===== BUILD ERROR OUTPUT (last 80 lines) ====="
+          tail -80 build-arm64.log
+          echo "===== EXPORTING AS ANNOTATION ====="
+          ERR=$(tail -30 build-arm64.log | tr '\n' '|' | head -c 6000)
+          echo "::error::$ERR"
         shell: bash
 
       - name: Build native library (armeabi-v7a)
