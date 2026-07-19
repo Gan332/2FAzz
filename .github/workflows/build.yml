@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  CARGO_TERM_COLOR: always
+  CARGO_TERM_COLOR: never
 
 jobs:
   build:
@@ -53,15 +53,29 @@ jobs:
 
       - name: Show build error (arm64-v8a)
         if: failure() && steps.build_arm64.outcome == 'failure'
-        run: |
-          echo "===== ALL ERRORS ====="
-          grep -E "^error" build-arm64.log || true
-          echo "===== ALL WARNINGS ====="
-          grep -E "^warning" build-arm64.log || true
-          echo "===== EXPORTING AS ANNOTATION ====="
-          ERR=$(grep -E "^error" build-arm64.log | head -c 6000)
-          echo "::error::$ERR"
         shell: bash
+        run: |
+          set +e
+          echo "===== ALL ERRORS ====="
+          grep -E "^error" build-arm64.log
+          echo "===== ALL WARNINGS ====="
+          grep -E "^warning" build-arm64.log
+          echo "===== ANNOTATION ====="
+          ERR=$(grep -E "^error" build-arm64.log | head -c 6000)
+          if [ -n "$ERR" ]; then
+            printf "::error::%s\n" "$(echo "$ERR" | tr '\n' '|')"
+          else
+            echo "::error::No 'error' lines found in build log. See full log artifact."
+          fi
+          exit 0
+
+      - name: Upload build log on failure
+        if: failure() && steps.build_arm64.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-arm64-log
+          path: build-arm64.log
+          if-no-files-found: warn
 
       - name: Build native library (armeabi-v7a)
         run: cargo ndk -t armeabi-v7a -o target/jniLibs build --release --lib
