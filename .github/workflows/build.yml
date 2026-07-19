@@ -25,7 +25,7 @@ jobs:
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
 
       - name: Install cargo-ndk
-        run: cargo install cargo-ndk --version 2.12.5
+        run: cargo install cargo-ndk --version 3.5.7
 
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -36,24 +36,26 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android licenses
-        run: yes | sdkmanager --licenses 2>/dev/null || true
-
-      - name: Install Android NDK and build tools
+      - name: Install Android SDK components
         run: |
+          yes | sdkmanager --licenses 2>/dev/null || true
           sdkmanager "ndk;27.0.12077973"
           sdkmanager "build-tools;35.0.0"
           sdkmanager "platforms;android-35"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> $GITHUB_ENV
 
-      - name: Debug env
+      - name: Build arm64-v8a (diagnostic)
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
-          ls "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/" | head -5
+          cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib 2>&1 || {
+            echo "--- CARGO TREE ---"
+            cargo tree --target aarch64-linux-android -f "{p} {f}" 2>&1 | head -80
+            echo "--- FEATURES ---"
+            cargo tree --target aarch64-linux-android -e features 2>&1 | head -80
+            exit 1
+          }
 
-      - name: Build native libraries
-        run: cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 -t x86 -o target/jniLibs build --release --lib
+      - name: Build all targets
+        run: cargo ndk -t armeabi-v7a -t x86_64 -t x86 -o target/jniLibs build --release --lib
 
       - name: Verify native libraries
         run: find target/jniLibs -name "*.so" -exec ls -la {} \;
