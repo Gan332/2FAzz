@@ -96,7 +96,7 @@ pub fn ios_button(
     ui.add_sized(
         [ui.available_width(), 44.0],
         egui::Button::new(
-            egui::RichText::new(text.into()).color(egui::Color32::WHITE).size(16.0f32),
+            egui::RichText::new(text).color(egui::Color32::WHITE).size(16.0f32),
         )
         .fill(accent)
         .rounding(egui::Rounding::same(12.0f32)),
@@ -111,7 +111,7 @@ pub fn ios_destructive_button(
     ui.add_sized(
         [ui.available_width(), 44.0],
         egui::Button::new(
-            egui::RichText::new(text.into()).color(egui::Color32::WHITE).size(16.0f32),
+            egui::RichText::new(text).color(egui::Color32::WHITE).size(16.0f32),
         )
         .fill(theme.destructive())
         .rounding(egui::Rounding::same(12.0f32)),
