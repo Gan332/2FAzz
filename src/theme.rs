@@ -88,11 +88,11 @@ impl AppTheme {
             ThemeMode::Dark => egui::Visuals::dark(),
         };
 
-        visuals.window_rounding = egui::Rounding::same(14);
-        visuals.widgets.noninteractive.rounding = egui::Rounding::same(12);
-        visuals.widgets.inactive.rounding = egui::Rounding::same(12);
-        visuals.widgets.active.rounding = egui::Rounding::same(12);
-        visuals.widgets.hovered.rounding = egui::Rounding::same(12);
+        visuals.window_rounding = egui::Rounding::same(14.0f32);
+        visuals.widgets.noninteractive.rounding = egui::Rounding::same(12.0f32);
+        visuals.widgets.inactive.rounding = egui::Rounding::same(12.0f32);
+        visuals.widgets.active.rounding = egui::Rounding::same(12.0f32);
+        visuals.widgets.hovered.rounding = egui::Rounding::same(12.0f32);
 
         visuals.widgets.noninteractive.bg_fill = self.bg_tertiary();
         visuals.widgets.inactive.bg_fill = self.bg_tertiary();
