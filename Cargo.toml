@@ -7,6 +7,10 @@ edition = "2021"
 name = "authenticator"
 crate-type = ["cdylib", "rlib"]
 
+[features]
+default = []
+android = ["eframe/android-native-activity"]
+
 [dependencies]
 eframe = { version = "0.30", default-features = false, features = [
     "default_fonts",
@@ -25,20 +29,7 @@ base32 = "0.5"
 rand = "0.8"
 log = "0.4"
 
-[target.'cfg(target_os = "android")'.dependencies]
-eframe = { version = "0.30", default-features = false, features = [
-    "android-native-activity",
-] }
-winit = { version = "0.30", default-features = false, features = [
-    "android-native-activity",
-    "rwh_06",
-] }
-
 [target.'cfg(not(target_os = "android"))'.dependencies]
-eframe = { version = "0.30", default-features = false, features = [
-    "x11",
-    "wayland",
-] }
 env_logger = "0.11"
 
 [profile.release]
