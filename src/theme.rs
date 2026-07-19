@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+﻿use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub enum ThemeMode {
@@ -88,11 +88,11 @@ impl AppTheme {
             ThemeMode::Dark => egui::Visuals::dark(),
         };
 
-        visuals.window_rounding = egui::Rounding::same(14.0);
-        visuals.widgets.noninteractive.rounding = egui::Rounding::same(12.0);
-        visuals.widgets.inactive.rounding = egui::Rounding::same(12.0);
-        visuals.widgets.active.rounding = egui::Rounding::same(12.0);
-        visuals.widgets.hovered.rounding = egui::Rounding::same(12.0);
+        visuals.window_rounding = egui::Rounding::same(14);
+        visuals.widgets.noninteractive.rounding = egui::Rounding::same(12);
+        visuals.widgets.inactive.rounding = egui::Rounding::same(12);
+        visuals.widgets.active.rounding = egui::Rounding::same(12);
+        visuals.widgets.hovered.rounding = egui::Rounding::same(12);
 
         visuals.widgets.noninteractive.bg_fill = self.bg_tertiary();
         visuals.widgets.inactive.bg_fill = self.bg_tertiary();
@@ -101,13 +101,13 @@ impl AppTheme {
         visuals.panel_fill = self.bg_primary();
 
         visuals.selection.bg_fill = self.accent_color();
-        visuals.selection.stroke = egui::Stroke::new(1.0, self.accent_color());
+        visuals.selection.stroke = egui::Stroke::new(1.0f32, self.accent_color());
 
         ctx.set_visuals(visuals);
 
         let mut style = (*ctx.style()).clone();
-        style.spacing.item_spacing = egui::vec2(8.0, 6.0);
-        style.spacing.button_padding = egui::vec2(16.0, 8.0);
+        style.spacing.item_spacing = egui::vec2(8.0f32, 6.0f32);
+        style.spacing.button_padding = egui::vec2(16.0f32, 8.0f32);
         style.interaction.show_tooltips_only_when_still = false;
         ctx.set_style(style);
     }

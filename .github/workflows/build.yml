@@ -47,17 +47,19 @@ jobs:
       - name: Build native library (arm64-v8a)
         id: build_arm64
         run: |
-          cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib -v 2>&1 | tee build-arm64.log
+          cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib 2>&1 | tee build-arm64.log
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Show build error (arm64-v8a)
         if: failure() && steps.build_arm64.outcome == 'failure'
         run: |
-          echo "===== BUILD ERROR OUTPUT (last 80 lines) ====="
-          tail -80 build-arm64.log
+          echo "===== ALL ERRORS ====="
+          grep -E "^error" build-arm64.log || true
+          echo "===== ALL WARNINGS ====="
+          grep -E "^warning" build-arm64.log || true
           echo "===== EXPORTING AS ANNOTATION ====="
-          ERR=$(tail -30 build-arm64.log | tr '\n' '|' | head -c 6000)
+          ERR=$(grep -E "^error" build-arm64.log | head -c 6000)
           echo "::error::$ERR"
         shell: bash
 
