@@ -48,26 +48,16 @@ jobs:
         id: build_arm64
         run: |
           cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib 2>&1 | tee build-arm64.log
-          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Show build error (arm64-v8a)
         if: failure() && steps.build_arm64.outcome == 'failure'
         shell: bash
         run: |
-          set +e
-          echo "===== ALL ERRORS ====="
-          grep -E "^error" build-arm64.log
-          echo "===== ALL WARNINGS ====="
-          grep -E "^warning" build-arm64.log
-          echo "===== ANNOTATION ====="
-          ERR=$(grep -E "^error" build-arm64.log | head -c 6000)
-          if [ -n "$ERR" ]; then
-            printf "::error::%s\n" "$(echo "$ERR" | tr '\n' '|')"
-          else
-            echo "::error::No 'error' lines found in build log. See full log artifact."
-          fi
-          exit 0
+          echo "## Build Error Log (last 120 lines)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -120 build-arm64.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload build log on failure
         if: failure() && steps.build_arm64.outcome == 'failure'
