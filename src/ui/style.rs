@@ -20,7 +20,7 @@ pub fn unlock_screen(ctx: &egui::Context, app: &mut AuthenticatorApp) {
 
             let width = 280.0f32;
             let pwd_resp = ui.add_sized(
-                [width, 36.0],
+                [width, 36.0f32],
                 egui::TextEdit::singleline(&mut app.vault_password)
                     .password(true)
                     .hint_text("Password"),
@@ -42,7 +42,7 @@ pub fn unlock_screen(ctx: &egui::Context, app: &mut AuthenticatorApp) {
             )
             .fill(app.theme.accent_color())
             .rounding(egui::Rounding::same(12.0f32));
-            if ui.add_sized([width, 40.0], btn).clicked() {
+            if ui.add_sized([width, 40.0f32], btn).clicked() {
                 app.try_unlock();
             }
         });
@@ -71,7 +71,7 @@ pub fn tab_bar(ui: &mut egui::Ui, app: &mut AuthenticatorApp) {
             )
             .fill(if is_selected { app.theme.accent_color() } else { app.theme.bg_primary() })
             .rounding(egui::Rounding::same(10.0f32))
-            .min_size(egui::vec2(ui.available_width() / tabs.len() as f32, 40.0));
+            .min_size(egui::vec2(ui.available_width() / tabs.len() as f32, 40.0f32));
 
             if ui.add(btn).clicked() {
                 app.current_tab = tab;
@@ -94,7 +94,7 @@ pub fn ios_button(
     accent: egui::Color32,
 ) -> egui::Response {
     ui.add_sized(
-        [ui.available_width(), 44.0],
+        [ui.available_width(), 44.0f32],
         egui::Button::new(
             egui::RichText::new(text).color(egui::Color32::WHITE).size(16.0f32),
         )
@@ -109,7 +109,7 @@ pub fn ios_destructive_button(
     theme: &crate::theme::AppTheme,
 ) -> egui::Response {
     ui.add_sized(
-        [ui.available_width(), 44.0],
+        [ui.available_width(), 44.0f32],
         egui::Button::new(
             egui::RichText::new(text).color(egui::Color32::WHITE).size(16.0f32),
         )

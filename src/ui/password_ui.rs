@@ -35,7 +35,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut AuthenticatorApp) {
             .inner_margin(16.0f32)
             .show(ui, |ui| {
                 ui.label(egui::RichText::new("Length").size(13.0f32).color(app.theme.text_secondary()));
-                ui.add(egui::Slider::new(&mut app.password_length, 8..=64).text("characters"));
+                ui.add(egui::Slider::new(&mut app.password_length, 8.0_f32..=64.0_f32).text("characters"));
             });
 
         ui.add_space(8.0f32);

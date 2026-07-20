@@ -84,10 +84,10 @@ pub fn dialog(ctx: &egui::Context, app: &mut AuthenticatorApp) {
                 .show(ui, |ui| {
                     ui.horizontal(|ui| {
                         ui.label(egui::RichText::new("Digits").size(13.0f32).color(theme.text_secondary()));
-                        ui.add(egui::DragValue::new(&mut app.new_token_digits).range(4..=10));
+                        ui.add(egui::DragValue::new(&mut app.new_token_digits).range(4.0_f32..=10.0_f32));
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             ui.label(egui::RichText::new("Period").size(13.0f32).color(theme.text_secondary()));
-                            ui.add(egui::DragValue::new(&mut app.new_token_period).range(5..=120));
+                            ui.add(egui::DragValue::new(&mut app.new_token_period).range(5.0_f32..=120.0_f32));
                             ui.label("s");
                         });
                     });
