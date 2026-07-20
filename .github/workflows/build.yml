@@ -50,14 +50,31 @@ jobs:
           cargo ndk -t arm64-v8a -o target/jniLibs build --release --lib 2>&1 | tee build-arm64.log
         shell: bash
 
-      - name: Show build error (arm64-v8a)
+      - name: Capture build errors
         if: failure() && steps.build_arm64.outcome == 'failure'
+        id: capture_errors
         shell: bash
         run: |
-          echo "## Build Error Log (last 120 lines)" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -120 build-arm64.log >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          ERRORS=$(tail -80 build-arm64.log | head -c 6000 | tr '\n' ' ' | tr -d '\r')
+          echo "errors<<EOFMARKER" >> $GITHUB_OUTPUT
+          echo "$ERRORS" >> $GITHUB_OUTPUT
+          echo "EOFMARKER" >> $GITHUB_OUTPUT
+
+      - name: Create issue with build errors
+        if: failure() && steps.build_arm64.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const errors = `${{ steps.capture_errors.outputs.errors }}`;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `## Build Failure\n\n**Run:** #${context.runNumber} (${runUrl})\n**Commit:** ${context.sha.substring(0,7)}\n\n### Compiler Output\n\`\`\`\n${errors}\n\`\`\`\n\n---\n_Auto-created by CI_`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Build failure #${context.runNumber} (${context.sha.substring(0,7)})`,
+              body: body,
+              labels: ['build-failure']
+            });
 
       - name: Upload build log on failure
         if: failure() && steps.build_arm64.outcome == 'failure'
